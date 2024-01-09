@@ -1,8 +1,20 @@
+import Sidebar from "./components/Sidebar";
+import NewProject from "./components/NewProject";
+import NoProject from "./components/NoProject";
+import { useState } from "react";
+
 function App() {
+  const [show, setShow] = useState(false);
+
+  function handleButtonChange() {
+    setShow(true);
+  }
+
   return (
-    <>
-      <h1 className="my-8 text-center text-5xl font-bold">Hello World</h1>
-    </>
+    <main className="h-screen my-8 flex gap-8">
+      <Sidebar handleClick={handleButtonChange} />
+      {show ? <NewProject /> : <NoProject />}
+    </main>
   );
 }
 
