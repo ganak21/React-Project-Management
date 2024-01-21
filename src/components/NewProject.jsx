@@ -1,7 +1,7 @@
 import Input from "./Input.jsx";
 import { useRef } from "react";
 
-export default function NewProject({ onAdd }) {
+export default function NewProject({ onAdd, handleCancel }) {
   const title = useRef();
   const description = useRef();
   const date = useRef();
@@ -12,7 +12,6 @@ export default function NewProject({ onAdd }) {
     const dateData = date.current.value;
 
     //validate
-
     onAdd({
       title: titleData,
       description: descriptionData,
@@ -24,7 +23,10 @@ export default function NewProject({ onAdd }) {
     <div className="w-[35rem] mt-16">
       <menu className="flex items-center justify-end gap-4 my-4">
         <li>
-          <button className="text-stone-800 hover:text-stone-950">
+          <button
+            className="text-stone-800 hover:text-stone-950"
+            onClick={handleCancel}
+          >
             Cancel
           </button>
         </li>
@@ -40,7 +42,7 @@ export default function NewProject({ onAdd }) {
       <div>
         <Input ref={title} label="Title" />
         <Input ref={description} label="Description" textarea />
-        <Input ref={date} label="Due Date" />
+        <Input type="date" ref={date} label="Due Date" />
       </div>
     </div>
   );

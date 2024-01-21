@@ -18,6 +18,15 @@ function App() {
     });
   }
 
+  function cancelProject() {
+    setShow((prevShow) => {
+      return {
+        ...prevShow,
+        projectId: undefined,
+      };
+    });
+  }
+
   //function cancelButtonChange() {
   // setShow(false);
   // }
@@ -31,24 +40,24 @@ function App() {
       };
       return {
         ...prevState,
-        selectedProjectId: undefined,
+        projectId: undefined,
         project: [...prevState.project, newProject],
       };
     });
   }
-
-  console.log(show);
 
   let content;
 
   if (show.projectId === undefined)
     content = <NoProject Newclick={handleButtonChange} />;
   else if (show.projectId === null)
-    content = <NewProject onAdd={handleAddProject} />;
+    content = (
+      <NewProject handleCancel={cancelProject} onAdd={handleAddProject} />
+    );
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <Sidebar handleClick={handleButtonChange} />
+      <Sidebar projects={show.project} handleClick={handleButtonChange} />
       {content}
     </main>
   );
