@@ -1,35 +1,61 @@
+import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import NewProject from "./components/NewProject";
 import NoProject from "./components/NoProject";
-import { useState } from "react";
+import SelectedProject from "./components/selectedProject";
 
 function App() {
   const [show, setShow] = useState({
     projectId: undefined,
     project: [],
+    tasks: [],
   });
 
-  function handleButtonChange() {
-    setShow((prevShow) => {
+  function handleAddTask(text) {
+    setShow((prevState) => {
+      const taskId = Math.random();
+      const newTask = {
+        text: text,
+        projectId: prevState.ProjectId,
+        id: taskId,
+      };
+
       return {
-        ...prevShow,
-        projectId: null,
+        ...prevState,
+        tasks: [newTask, ...prevState.tasks],
       };
     });
+  }
+
+  function handleDeleteTask(id) {
+    setShow((prevState) => {
+      return {
+        ...prevState,
+        tasks: prevState.tasks.filter((task) => task.id !== id),
+      };
+    });
+  }
+
+  function handleSelectedProject(id) {
+    setShow((prevShow) => ({
+      ...prevShow,
+      projectId: id,
+    }));
+  }
+
+  function handleButtonChange() {
+    setShow((prevShow) => ({
+      ...prevShow,
+      projectId: null,
+    }));
   }
 
   function cancelProject() {
-    setShow((prevShow) => {
-      return {
-        ...prevShow,
-        projectId: undefined,
-      };
-    });
+    setShow((prevShow) => ({
+      ...prevShow,
+      projectId: undefined,
+    }));
   }
-
-  //function cancelButtonChange() {
-  // setShow(false);
-  // }
 
   function handleAddProject(projectData) {
     setShow((prevState) => {
@@ -46,7 +72,25 @@ function App() {
     });
   }
 
-  let content;
+  function handleDeleteProject() {
+    setShow((prevstate) => ({
+      ...prevstate,
+      projectId: undefined, // Set projectId to null or undefined as appropriate
+      project: prevstate.project.filter(
+        (project) => project.id !== setShow.projectId,
+      ),
+    }));
+  }
+
+  let content = (
+    <SelectedProject
+      project={show.project.find((project) => project.id === show.projectId)}
+      onDelete={handleDeleteProject}
+      onAddTask={handleAddTask}
+      onDeleteTask={handleDeleteTask}
+      tasks={show.tasks}
+    />
+  );
 
   if (show.projectId === undefined)
     content = <NoProject Newclick={handleButtonChange} />;
@@ -57,7 +101,11 @@ function App() {
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <Sidebar projects={show.project} handleClick={handleButtonChange} />
+      <Sidebar
+        handleSelect={handleSelectedProject}
+        projects={show.project}
+        handleClick={handleButtonChange}
+      />
       {content}
     </main>
   );
